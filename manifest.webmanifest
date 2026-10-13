@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "四级成长工作台",
+  "short_name": "四级工作台",
+  "description": "无需 Scriptable 的四级备考主屏幕应用，离线记录任务、打卡和成长。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7f1",
+  "theme_color": "#102b2a",
+  "icons": [
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
