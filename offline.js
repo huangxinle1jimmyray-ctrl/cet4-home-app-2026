@@ -38,13 +38,19 @@ function updateConnection(message){
 async function prepareOffline(){
   if(!('serviceWorker'in navigator)){updateConnection('此浏览器不支持离线安装；请用 iPhone Safari 打开');return}
   try{
-    const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+    const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
     await navigator.serviceWorker.ready;
-    const cache=await caches.open('cet4-home-shell-v2');
+    if(navigator.onLine) registration.update().catch(()=>{});
+    const cache=await caches.open('cet4-home-shell-v3');
     shellReady=!!(await cache.match(new URL('./index.html',registration.scope).href));
     updateConnection(shellReady?undefined:'页面缓存未完成，请联网刷新后再安装');
   }catch(error){updateConnection('离线准备失败：'+String(error.message||error)+'。请联网刷新后重试')}
 }
+// A new worker claims the open app after installation. Reload just the page;
+// localStorage and IndexedDB remain untouched.
+navigator.serviceWorker?.addEventListener('controllerchange',()=>{
+  if(navigator.onLine) location.reload();
+});
 window.addEventListener('online',()=>updateConnection());
 window.addEventListener('offline',()=>updateConnection());
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;installButton.hidden=false});
@@ -112,3 +118,4 @@ window.addEventListener('storage',event=>{
   }
   window.persistBackup(state);updateConnection();prepareOffline();
 })();
+
