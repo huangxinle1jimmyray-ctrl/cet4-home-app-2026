@@ -40,7 +40,7 @@ async function prepareOffline(){
   try{
     const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
     await navigator.serviceWorker.ready;
-    const cache=await caches.open('cet4-home-shell-v1');
+    const cache=await caches.open('cet4-home-shell-v2');
     shellReady=!!(await cache.match(new URL('./index.html',registration.scope).href));
     updateConnection(shellReady?undefined:'页面缓存未完成，请联网刷新后再安装');
   }catch(error){updateConnection('离线准备失败：'+String(error.message||error)+'。请联网刷新后重试')}

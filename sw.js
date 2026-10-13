@@ -1,9 +1,9 @@
 // Independent Home Screen app shell. Every cached response is reconstructed so
 // Safari never receives a response carrying an internal redirect flag.
-const CACHE = 'cet4-home-shell-v1';
+const CACHE = 'cet4-home-shell-v2';
 const ASSETS = [
   './', './index.html', './style.css', './schedule.css', './planner.css',
-  './planner-extra.css', './offline.css', './iphone.css', './app.js',
+  './planner-extra.css', './offline.css', './iphone.css', './taste.css', './app.js',
   './planner.js', './offline.js', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon.svg'
 ];
