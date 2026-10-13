@@ -1,6 +1,6 @@
 // Independent Home Screen app shell. Every cached response is reconstructed so
 // Safari never receives a response carrying an internal redirect flag.
-const CACHE = 'cet4-home-shell-v2';
+const CACHE = 'cet4-home-shell-v3';
 const ASSETS = [
   './', './index.html', './style.css', './schedule.css', './planner.css',
   './planner-extra.css', './offline.css', './iphone.css', './taste.css', './app.js',
@@ -45,9 +45,11 @@ self.addEventListener('fetch', event => {
     const appPage = url('./index.html');
     const key = request.mode === 'navigate' ? appPage : target.href;
     const cached = await cache.match(key);
-    if (cached) return cached;
+    // When online, refresh the document so an installed Home Screen app can
+    // receive interface changes without clearing its local study records.
+    if (request.mode !== 'navigate' && cached) return cached;
     try {
-      const response = await fetch(request);
+      const response = await fetch(request, request.mode === 'navigate' ? { cache: 'no-store', redirect: 'error' } : undefined);
       if (response.ok && !response.redirected) {
         const clean = await cleanResponse(response);
         await cache.put(key, clean.clone());
@@ -55,11 +57,9 @@ self.addEventListener('fetch', event => {
       }
       return response;
     } catch (error) {
-      if (request.mode === 'navigate') {
-        const shell = await cache.match(appPage);
-        if (shell) return shell;
-      }
+      if (request.mode === 'navigate' && cached) return cached;
       throw error;
     }
   })());
 });
+
